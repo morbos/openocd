@@ -11,7 +11,7 @@
 #define BUILD_AMTJTAGACCEL 0
 
 /* 0 if you do not want the Olimex ARM-JTAG-EW Programmer. */
-#define BUILD_ARMJTAGEW 1
+/* #undef BUILD_ARMJTAGEW */
 
 /* 0 if you don't want at91rm9200. */
 #define BUILD_AT91RM9200 0
@@ -23,7 +23,7 @@
 #define BUILD_BUSPIRATE 0
 
 /* 0 if you do not want the CMSIS-DAP Compliant Debugger. */
-#define BUILD_CMSIS_DAP 1
+/* #undef BUILD_CMSIS_DAP */
 
 /* 0 if you don't want dummy driver. */
 #define BUILD_DUMMY 0
@@ -59,7 +59,7 @@
 #define BUILD_JTAG_VPI 0
 
 /* 0 if you do not want the Cypress KitProg Programmer. */
-#define BUILD_KITPROG 1
+/* #undef BUILD_KITPROG */
 
 /* Use the dummy minidriver. */
 /* #undef BUILD_MINIDRIVER_DUMMY */
@@ -86,7 +86,7 @@
 #define BUILD_REMOTE_BITBANG 0
 
 /* 0 if you do not want the Raisonance RLink JTAG Programmer. */
-#define BUILD_RLINK 1
+/* #undef BUILD_RLINK */
 
 /* 0 if you don't want SysfsGPIO driver. */
 #define BUILD_SYSFSGPIO 0
@@ -98,7 +98,7 @@
 #define BUILD_ULINK 1
 
 /* 0 if you do not want the USBProg JTAG Programmer. */
-#define BUILD_USBPROG 1
+/* #undef BUILD_USBPROG */
 
 /* 0 if you do not want the Altera USB-Blaster Compatible. */
 /* #undef BUILD_USB_BLASTER */
@@ -157,14 +157,11 @@
 /* Define if your libusb has libusb_get_port_numbers() */
 #define HAVE_LIBUSB_GET_PORT_NUMBERS 1
 
-/* Define to 1 if the system has the type 'long long int'. */
+/* Define to 1 if the system has the type `long long int'. */
 #define HAVE_LONG_LONG_INT 1
 
 /* Define to 1 if you have the <malloc.h> header file. */
 #define HAVE_MALLOC_H 1
-
-/* Define to 1 if you have the <memory.h> header file. */
-#define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the <netdb.h> header file. */
 #define HAVE_NETDB_H 1
@@ -192,6 +189,9 @@
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#define HAVE_STDIO_H 1
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1
@@ -227,7 +227,7 @@
 #define HAVE_SYS_STAT_H 1
 
 /* Define to 1 if you have the <sys/sysctl.h> header file. */
-#define HAVE_SYS_SYSCTL_H 1
+/* #undef HAVE_SYS_SYSCTL_H */
 
 /* Define to 1 if you have the <sys/time.h> header file. */
 #define HAVE_SYS_TIME_H 1
@@ -238,7 +238,7 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
-/* Define to 1 if the system has the type 'unsigned long long int'. */
+/* Define to 1 if the system has the type `unsigned long long int'. */
 #define HAVE_UNSIGNED_LONG_LONG_INT 1
 
 /* Define to 1 if you have the `usleep' function. */
@@ -298,10 +298,13 @@
 /* 0 if you don't want parport to use ppdev. */
 #define PARPORT_USE_PPDEV 1
 
-/* Define to 1 if you have the ANSI C header files. */
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
 #define STDC_HEADERS 1
 
-/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. This
+   macro is obsolete. */
 #define TIME_WITH_SYS_TIME 1
 
 /* Version number of package */

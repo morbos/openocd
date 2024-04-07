@@ -1144,8 +1144,9 @@ static int numicro_reg_unlock(struct target *target)
 
 	/* Check to see if NUC is register unlocked or not */
 	retval = target_read_u32(target, NUMICRO_SYS_WRPROT, &is_protected);
-	if (retval != ERROR_OK)
-		return retval;
+	if (retval != ERROR_OK) {
+	  return retval;
+	}
 
 	LOG_DEBUG("protected = 0x%08" PRIx32 "", is_protected);
 	if (is_protected == 0) {	/* means protected - so unlock it */
@@ -1241,9 +1242,10 @@ static uint32_t numicro_fmc_cmd(struct target *target, uint32_t cmd, uint32_t ad
 	timeout = 100;
 	for (;;) {
 		retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
-		if (retval != ERROR_OK)
-			return retval;
-			LOG_DEBUG("status: 0x%" PRIx32 "", status);
+		if (retval != ERROR_OK) {
+		  return retval;
+		}
+		LOG_DEBUG("status: 0x%" PRIx32 "", status);
 		if ((status & (ISPTRG_ISPGO)) == 0)
 			break;
 		if (timeout-- <= 0) {
@@ -1509,9 +1511,10 @@ static int numicro_erase(struct flash_bank *bank, int first, int last)
 		timeout = 100;
 		for (;;) {
 			retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
-			if (retval != ERROR_OK)
-				return retval;
-				LOG_DEBUG("status: 0x%" PRIx32 "", status);
+			if (retval != ERROR_OK) {
+			  return retval;
+			}
+			LOG_DEBUG("status: 0x%" PRIx32 "", status);
 			if (status == 0)
 				break;
 			if (timeout-- <= 0) {
@@ -1614,9 +1617,10 @@ static int numicro_write(struct flash_bank *bank, const uint8_t *buffer,
 			timeout = 100;
 			for (;;) {
 				retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
-				if (retval != ERROR_OK)
-					return retval;
-					LOG_DEBUG("status: 0x%" PRIx32 "", status);
+				if (retval != ERROR_OK) {
+				  return retval;
+				}
+				LOG_DEBUG("status: 0x%" PRIx32 "", status);
 				if (status == 0)
 					break;
 				if (timeout-- <= 0) {

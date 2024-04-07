@@ -1123,6 +1123,11 @@ static int stm32x_probe(struct flash_bank *bank)
 		num_prot_blocks = 15;
 		break;
 
+	case 0x347:	/* AT32F403 clone */
+		max_flash_size_in_kb = 1024;
+		flash_size_reg = 0x1FFFF7E0;
+		break;
+		
 	default:
 		LOG_WARNING("Cannot identify target as a STM32 family.");
 		return ERROR_FAIL;
@@ -1417,6 +1422,10 @@ static int get_stm32x_info(struct flash_bank *bank, char *buf, int buf_size)
 		}
 		break;
 
+	case 0x347:
+		device_str = "AT32F403";
+		break;
+		
 	default:
 		snprintf(buf, buf_size, "Cannot identify target as a STM32F2/4/7\n");
 		return ERROR_FAIL;

@@ -62,7 +62,7 @@ int armv8m_trace_tpiu_config(struct target *target)
 	target_unregister_timer_callback(armv8m_poll_trace, target);
 
 	retval = adapter_config_trace(trace_config->config_type == TRACE_CONFIG_TYPE_INTERNAL_V8M,
-		trace_config->pin_protocol, trace_config->port_size,
+				      (enum tpiu_pin_protocol)trace_config->pin_protocol, trace_config->port_size,
 		&trace_config->trace_freq, trace_config->traceclkin_freq, &prescaler);
 
 	if (retval != ERROR_OK)
@@ -156,7 +156,7 @@ COMMAND_HANDLER(handle_tpiu_config_command)
 		if (CMD_ARGC == cmd_idx + 1) {
 			close_trace_file(armv8m);
 
-			armv8m->trace_config.config_type = TRACE_CONFIG_TYPE_DISABLED;
+			armv8m->trace_config.config_type = (enum trace_config_type_v8m)TRACE_CONFIG_TYPE_DISABLED;
 			if (CMD_CTX->mode == COMMAND_EXEC)
 				return armv8m_trace_tpiu_config(target);
 			else
@@ -166,13 +166,13 @@ COMMAND_HANDLER(handle_tpiu_config_command)
 		   !strcmp(CMD_ARGV[cmd_idx], "internal")) {
 		close_trace_file(armv8m);
 
-		armv8m->trace_config.config_type = TRACE_CONFIG_TYPE_EXTERNAL;
+		armv8m->trace_config.config_type = (enum trace_config_type_v8m)TRACE_CONFIG_TYPE_EXTERNAL;
 		if (!strcmp(CMD_ARGV[cmd_idx], "internal")) {
 			cmd_idx++;
 			if (CMD_ARGC == cmd_idx)
 				return ERROR_COMMAND_SYNTAX_ERROR;
 
-			armv8m->trace_config.config_type = TRACE_CONFIG_TYPE_INTERNAL;
+			armv8m->trace_config.config_type = (enum trace_config_type_v8m)TRACE_CONFIG_TYPE_INTERNAL;
 
 			if (strcmp(CMD_ARGV[cmd_idx], "-") != 0) {
 				armv8m->trace_config.trace_file = fopen(CMD_ARGV[cmd_idx], "ab");
@@ -187,7 +187,7 @@ COMMAND_HANDLER(handle_tpiu_config_command)
 			return ERROR_COMMAND_SYNTAX_ERROR;
 
 		if (!strcmp(CMD_ARGV[cmd_idx], "sync")) {
-			armv8m->trace_config.pin_protocol = TPIU_PIN_PROTOCOL_SYNC;
+		        armv8m->trace_config.pin_protocol = (enum tpiu_pin_protocol_v8m)TPIU_PIN_PROTOCOL_SYNC;
 
 			cmd_idx++;
 			if (CMD_ARGC == cmd_idx)
@@ -196,9 +196,9 @@ COMMAND_HANDLER(handle_tpiu_config_command)
 			COMMAND_PARSE_NUMBER(u32, CMD_ARGV[cmd_idx], armv8m->trace_config.port_size);
 		} else {
 			if (!strcmp(CMD_ARGV[cmd_idx], "manchester"))
-				armv8m->trace_config.pin_protocol = TPIU_PIN_PROTOCOL_ASYNC_MANCHESTER;
+			        armv8m->trace_config.pin_protocol = (enum tpiu_pin_protocol_v8m)TPIU_PIN_PROTOCOL_ASYNC_MANCHESTER;
 			else if (!strcmp(CMD_ARGV[cmd_idx], "uart"))
-				armv8m->trace_config.pin_protocol = TPIU_PIN_PROTOCOL_ASYNC_UART;
+			        armv8m->trace_config.pin_protocol = (enum tpiu_pin_protocol_v8m)TPIU_PIN_PROTOCOL_ASYNC_UART;
 			else
 				return ERROR_COMMAND_SYNTAX_ERROR;
 

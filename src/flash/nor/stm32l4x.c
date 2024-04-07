@@ -182,6 +182,10 @@ static const struct stm32l4_rev stm32_495_revs[] = {
 	{ 0x2001, "2.1" },
 };
 
+static const struct stm32l4_rev stm32_497_revs[] = {
+	{ 0x1001, "1.1" },
+};
+
 static const struct stm32l4_part_info stm32l4_parts[] = {
 	{
 	  .id                    = 0x415,
@@ -263,6 +267,16 @@ static const struct stm32l4_part_info stm32l4_parts[] = {
 	  .flash_regs_base       = 0x58004000,
 	  .fsize_addr            = 0x1FFF75E0,
 	},
+	{
+	  .id                    = 0x497,
+	  .revs                  = stm32_497_revs,
+	  .num_revs              = ARRAY_SIZE(stm32_497_revs),
+	  .device_str            = "STM32WL5x",
+	  .max_flash_size_kb     = 256,
+	  .has_dual_bank         = false,
+	  .flash_regs_base       = 0x58004000,
+	  .fsize_addr            = 0x1FFF75E0,
+	},
 };
 
 /* flash bank stm32l4x <base> <size> 0 0 <target#> */
@@ -295,12 +309,12 @@ static inline uint32_t stm32l4_get_flash_reg(struct flash_bank *bank, uint32_t r
 
 static inline int stm32l4_read_flash_reg(struct flash_bank *bank, uint32_t reg_offset, uint32_t *value)
 {
-	return target_read_u32(bank->target, stm32l4_get_flash_reg(bank, reg_offset), value);
+    return target_read_u32(bank->target, stm32l4_get_flash_reg(bank, reg_offset), value);
 }
 
 static inline int stm32l4_write_flash_reg(struct flash_bank *bank, uint32_t reg_offset, uint32_t value)
 {
-	return target_write_u32(bank->target, stm32l4_get_flash_reg(bank, reg_offset), value);
+    return target_write_u32(bank->target, stm32l4_get_flash_reg(bank, reg_offset), value);
 }
 
 static int stm32l4_wait_status_busy(struct flash_bank *bank, int timeout)
@@ -374,6 +388,8 @@ static int stm32l4_unlock_reg(struct flash_bank *bank)
 		return ERROR_TARGET_FAILURE;
 	}
 
+LOG_INFO("ctrl %x" PRIx32 "", ctrl); // !!!!!!!
+	
 	return ERROR_OK;
 }
 
@@ -523,7 +539,8 @@ static int stm32l4_erase(struct flash_bank *bank, int first, int last)
 			snb = i - stm32l4_info->bank1_sectors;
 			erase_flags |= snb << FLASH_PAGE_SHIFT | FLASH_CR_BKER;
 		} else
-			erase_flags |= i << FLASH_PAGE_SHIFT;
+		    erase_flags |= i << FLASH_PAGE_SHIFT;
+
 		retval = stm32l4_write_flash_reg(bank, STM32_FLASH_CR, erase_flags);
 		if (retval != ERROR_OK)
 			return retval;
@@ -730,7 +747,8 @@ static int stm32l4_probe(struct flash_bank *bank)
 		return retval;
 
 	device_id = stm32l4_info->idcode & 0xFFF;
-
+	LOG_INFO("device_id = 0x%08" PRIx32 , device_id);
+	
 	for (unsigned int n = 0; n < ARRAY_SIZE(stm32l4_parts); n++) {
 		if (device_id == stm32l4_parts[n].id)
 			stm32l4_info->part_info = &stm32l4_parts[n];
@@ -835,6 +853,12 @@ static int stm32l4_probe(struct flash_bank *bank)
 	case 0x495:
 		/* single bank flash */
 		page_size = 4096;
+		num_pages = flash_size_in_kb / 4;
+		stm32l4_info->bank1_sectors = num_pages;
+		break;
+	case 0x497:
+		/* single bank flash */
+	        page_size = 2048;
 		num_pages = flash_size_in_kb / 4;
 		stm32l4_info->bank1_sectors = num_pages;
 		break;
